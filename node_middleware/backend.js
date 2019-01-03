@@ -78,7 +78,7 @@ serverSocket.on("connection", socket => {
   });
 
   socket.on("requestPipeline", solutionId => {
-    console.log("Server: requestPipeline: ", solutionId);
+    console.log("Server: requestPipeline, id:", solutionId);
     let pipelinePath = "./responses/describeSolutionResponses/";
     let filename = pipelinePath + solutionId + ".json";
     let pipelineStr = fs.readFileSync(filename, "utf8");

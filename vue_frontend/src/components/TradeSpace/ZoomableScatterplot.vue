@@ -28,7 +28,7 @@ export default {
       // d is the element of solutions, aka solution
       if (d) {
         var solutionId = d["id"];
-        console.log(solutionId);
+        // console.log(solutionId);
         // responsePipeline defined in PipelineView.vue
         this.$socket.emit("requestPipeline", solutionId);
       }

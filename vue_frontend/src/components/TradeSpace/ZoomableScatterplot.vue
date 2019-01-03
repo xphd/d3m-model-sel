@@ -34,7 +34,7 @@ export default {
       }
     },
     getZoomableScatterplot(xCoor, yCoor) {
-      console.log("getZoomableScatterplot");
+      // console.log("getZoomableScatterplot");
       var margin = { top: 50, right: 300, bottom: 50, left: 50 },
         outerWidth = 1050,
         outerHeight = 500,

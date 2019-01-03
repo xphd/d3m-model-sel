@@ -1,13 +1,13 @@
 <template>
   <div>
-    <h1>Scatter Plot!</h1>
-
+    <p>Scatter Plot!</p>
+    <!-- 
     <div v-for="(solution,index) in solutions" v-bind:key="index">
       <input type="radio" :value="solution.id" v-model="selected">
       <label>{{solution.id}} / {{solution.score}}</label>
       <br>
     </div>
-    <button @click="getPipeline">Request:</button>
+    <button @click="getPipeline">Request:</button>-->
     <br>
     {{selected}}
     <div id="scatter"></div>
@@ -23,18 +23,20 @@ export default {
   data() {
     return {
       selected: "",
-      points: []
+      xCoor: "pipelineSize", // x-coordinate
+      yCoor: "score" //
     };
   },
   props: ["solutions"],
   watch: {
     solutions: function() {
       console.log("getPoints");
-      this.solutions.forEach(solution => {
-        // console.log([solution.pipelineSize, solution.score]);
-        this.points.push([solution.pipelineSize, solution.score]);
-      });
-      console.log("Points done");
+      // this.solutions.forEach(solution => {
+      //   // console.log([solution.pipelineSize, solution.score]);
+      //   // this.points.push([solution.pipelineSize, solution.score]);
+      //   console.log(solution);
+      // });
+      // console.log("Points done");
       this.getZoomableScatterplot();
     }
   },
@@ -42,16 +44,20 @@ export default {
   //   this.getZoomableScatterplot();
   // },
   methods: {
-    getPipeline() {
-      let selected = this.selected;
-      if (selected) {
-        console.log(selected);
+    getPipeline(d) {
+      // let selected = this.selected;
+      if (d) {
+        var id = d["id"];
+        console.log(id);
         // responsePipeline in PipelineView.vue
-        this.$socket.emit("requestPipeline", selected);
+        this.$socket.emit("requestPipeline", id);
       }
     },
     getZoomableScatterplot() {
+      var xCoor = this.xCoor;
+      var yCoor = this.yCoor;
       console.log("getZoomableScatterplot");
+
       var margin = { top: 50, right: 300, bottom: 50, left: 50 },
         outerWidth = 1050,
         outerHeight = 500,
@@ -68,21 +74,21 @@ export default {
         .range([height, 0])
         .nice();
 
-      var data = this.points;
+      var data = this.solutions;
       var xMax =
           d3.max(data, function(d) {
-            return d[0];
+            return d[xCoor];
           }) * 1.05,
         xMin = d3.min(data, function(d) {
-          return d[0];
+          return d[xCoor];
         }),
         xMin = xMin > 0 ? 0 : xMin,
         yMax =
           d3.max(data, function(d) {
-            return d[1];
+            return d[yCoor];
           }) * 1.05,
         yMin = d3.min(data, function(d) {
-          return d[1];
+          return d[yCoor];
         }),
         yMin = yMin > 0 ? 0 : yMin;
 
@@ -106,7 +112,8 @@ export default {
         .attr("class", "d3-tip")
         .offset([-10, 0])
         .html(function(d) {
-          return "x: " + d[0] + "<br>" + "y: " + d[1];
+          return "x: " + d[xCoor] + "<br>" + "y: " + d[yCoor];
+          // return "Hello";
         });
 
       var zoomBeh = d3.behavior
@@ -190,40 +197,41 @@ export default {
           return 6;
         })
         .attr("transform", transform)
-        .style("fill", function(d) {
-          return color(d[colorCat]);
-        })
+        // .style("fill", function(d) {
+        //   return color(d[colorCat]);
+        // })
         .on("mouseover", tip.show)
-        .on("mouseout", tip.hide);
+        .on("mouseout", tip.hide)
+        .on("click", this.getPipeline);
 
-      d3.select("input").on("click", change);
+      // d3.select("input").on("click", change);
 
-      function change() {
-        xCat = "Carbs";
-        xMax = d3.max(data, function(d) {
-          return d[0];
-        });
-        xMin = d3.min(data, function(d) {
-          return d[0];
-        });
+      // function change() {
+      //   xCat = "Carbs";
+      //   xMax = d3.max(data, function(d) {
+      //     return d[xCoor];
+      //   });
+      //   xMin = d3.min(data, function(d) {
+      //     return d[xCoor];
+      //   });
 
-        zoomBeh.x(x.domain([xMin, xMax])).y(y.domain([yMin, yMax]));
+      //   zoomBeh.x(x.domain([xMin, xMax])).y(y.domain([yMin, yMax]));
 
-        var svg = d3.select("#scatter").transition();
+      //   var svg = d3.select("#scatter").transition();
 
-        svg
-          .select(".x.axis")
-          .duration(750)
-          .call(xAxis)
-          .select(".label")
-          .text(xCat);
+      //   svg
+      //     .select(".x.axis")
+      //     .duration(750)
+      //     .call(xAxis)
+      //     .select(".label")
+      //     .text(xCat);
 
-        objects
-          .selectAll(".dot")
-          .transition()
-          .duration(1000)
-          .attr("transform", transform);
-      }
+      //   objects
+      //     .selectAll(".dot")
+      //     .transition()
+      //     .duration(1000)
+      //     .attr("transform", transform);
+      // }
 
       function zoom() {
         svg.select(".x.axis").call(xAxis);
@@ -233,7 +241,7 @@ export default {
       }
 
       function transform(d) {
-        return "translate(" + x(d[0]) + "," + y(d[1]) + ")";
+        return "translate(" + x(d[xCoor]) + "," + y(d[yCoor]) + ")";
       }
     }
   }

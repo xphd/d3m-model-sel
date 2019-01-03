@@ -1,12 +1,12 @@
 <template>
   <div>
     <p>Trade Space</p>
-    <Scatter :solutions="solutions"></Scatter>
+    <ZoomableScatterplot :solutions="solutions"/>
   </div>
 </template>
 
 <script>
-import Scatter from "./Scatter.vue";
+import ZoomableScatterplot from "./ZoomableScatterplot.vue";
 export default {
   data() {
     return {
@@ -14,7 +14,7 @@ export default {
     };
   },
   components: {
-    Scatter
+    ZoomableScatterplot
   },
   sockets: {
     connect() {

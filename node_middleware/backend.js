@@ -72,7 +72,7 @@ serverSocket.on("connection", socket => {
 
   socket.on("requestPipeline", pipeline => {
     console.log("Server: requestPipeline received");
-    // console.log(pipeline);
+    console.log(pipeline);
     // console.log(typeof pipeline);
     const pipelinePath = "./responses/describeSolutionResponses/";
     const pipelineStr = fs.readFileSync(pipelinePath + pipeline, "utf8");

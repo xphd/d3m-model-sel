@@ -1,14 +1,14 @@
 <template>
   <div>
     <p>Pipeline View</p>
-    <FlowChart :pipeline="pipeline"></FlowChart>
+    <FlowChart :pipeline="pipeline"/>
   </div>
 </template>
 
 <script>
 import FlowChart from "./FlowChart.vue";
 export default {
-  name: "app",
+  name: "pipeline view",
   data() {
     return {
       pipeline: {}

@@ -8,6 +8,7 @@
 <script>
 import ZoomableScatterplot from "./ZoomableScatterplot.vue";
 export default {
+  name: "trade space",
   data() {
     return {
       solutions: []

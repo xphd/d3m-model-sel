@@ -1,23 +1,21 @@
 <template>
   <div>
     <p>Flow Chart</p>
-    <!-- <div align="left" v-for="item in nodes" :key="item.id">
-      <input type="checkbox" :id="item.id" :value="item.id" v-model="nodesPicked">
-      <label for="jack">{{item.text}}</label>
-    </div>
-    <span>Select Primitives: {{ nodesPicked }}</span>-->
     <vue-mermaid :nodes="nodes" v-if="isPipelineShown"></vue-mermaid>
-
-    <!-- <div align="left">      
-      <json-viewer :value="pipeline" :expand-depth="5" copyable boxed sort></json-viewer>
-    </div>-->
   </div>
 </template>
 
 <script>
 export default {
-  name: "FlowChart",
+  name: "flow chart",
   props: ["pipeline"],
+  data() {
+    return {
+      isPipelineShown: false,
+      // nodesPicked: [],
+      nodes: []
+    };
+  },
   watch: {
     pipeline: function() {
       this.visualizePipeline();
@@ -29,19 +27,13 @@ export default {
       });
     }
   },
-  data() {
-    return {
-      isPipelineShown: false,
-      nodesPicked: [],
-      nodes: []
-    };
-  },
+
   methods: {
     visualizePipeline() {
       // console.log("visualize pipeline");
       const elementId = { id: 0 };
       this.isPipelineShown = true;
-      this.nodesPicked = [];
+      // this.nodesPicked = [];
       this.nodes = [];
       branch(this.pipeline, this.nodes, elementId);
       function branch(pipeline, nodes, elementId) {

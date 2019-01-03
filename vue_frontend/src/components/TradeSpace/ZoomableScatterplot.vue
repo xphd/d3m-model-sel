@@ -1,33 +1,23 @@
 <template>
   <div>
-    <p>Scatter Plot!</p>
-    <!-- 
-    <div v-for="(solution,index) in solutions" v-bind:key="index">
-      <input type="radio" :value="solution.id" v-model="selected">
-      <label>{{solution.id}} / {{solution.score}}</label>
-      <br>
-    </div>
-    <button @click="getPipeline">Request:</button>-->
-    <br>
-    {{selected}}
-    <div id="scatter"></div>
+    <p>Zoomable Scatterplot!</p>
+    <div id="zoomable"></div>
   </div>
 </template>
-
 
 <script>
 import * as d3 from "d3v3";
 import d3Tip from "d3-tip";
 d3.tip = d3Tip;
 export default {
+  name: "zoomable scatterplot",
+  props: ["solutions"],
   data() {
     return {
-      selected: "",
       xCoor: "pipelineSize", // x-coordinate
       yCoor: "score" //
     };
   },
-  props: ["solutions"],
   watch: {
     solutions: function() {
       console.log("getPoints");
@@ -40,9 +30,6 @@ export default {
       this.getZoomableScatterplot();
     }
   },
-  // mounted() {
-  //   this.getZoomableScatterplot();
-  // },
   methods: {
     getPipeline(d) {
       // let selected = this.selected;
@@ -124,7 +111,7 @@ export default {
         .on("zoom", zoom);
 
       var svg = d3
-        .select("#scatter")
+        .select("#zoomable")
         .append("svg")
         .attr("width", outerWidth)
         .attr("height", outerHeight)

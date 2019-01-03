@@ -1,0 +1,23 @@
+{
+  "name": "vue_frontend",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "serve": "vue-cli-service serve --open",
+    "build": "vue-cli-service build"
+  },
+  "dependencies": {
+    "bootstrap-vue": "^2.0.0-rc.11",
+    "d3-tip": "^0.9.1",
+    "d3v3": "^1.0.3",
+    "vue": "^2.5.21",
+    "vue-json-viewer": "^2.0.6",
+    "vue-mermaid": "0.0.4",
+    "vue-socket.io": "^3.0.4"
+  },
+  "devDependencies": {
+    "@vue/cli-plugin-babel": "^3.2.0",
+    "@vue/cli-service": "^3.2.0",
+    "vue-template-compiler": "^2.5.21"
+  }
+}

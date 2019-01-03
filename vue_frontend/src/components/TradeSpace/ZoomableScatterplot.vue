@@ -1,16 +1,8 @@
 <template>
   <div>
     <p>Scatter Plot!</p>
-    <!-- 
-    <div v-for="(solution,index) in solutions" v-bind:key="index">
-      <input type="radio" :value="solution.id" v-model="selected">
-      <label>{{solution.id}} / {{solution.score}}</label>
-      <br>
-    </div>
-    <button @click="getPipeline">Request:</button>-->
-    <br>
-    {{selected}}
-    <div id="scatter"></div>
+
+    <div id="zoomable"></div>
   </div>
 </template>
 
@@ -20,6 +12,8 @@ import * as d3 from "d3v3";
 import d3Tip from "d3-tip";
 d3.tip = d3Tip;
 export default {
+  name: "zoomable scatterplot",
+  props: ["solutions"],
   data() {
     return {
       selected: "",
@@ -27,25 +21,15 @@ export default {
       yCoor: "score" //
     };
   },
-  props: ["solutions"],
   watch: {
     solutions: function() {
       console.log("getPoints");
-      // this.solutions.forEach(solution => {
-      //   // console.log([solution.pipelineSize, solution.score]);
-      //   // this.points.push([solution.pipelineSize, solution.score]);
-      //   console.log(solution);
-      // });
-      // console.log("Points done");
+
       this.getZoomableScatterplot();
     }
   },
-  // mounted() {
-  //   this.getZoomableScatterplot();
-  // },
   methods: {
     getPipeline(d) {
-      // let selected = this.selected;
       if (d) {
         var id = d["id"];
         console.log(id);
@@ -124,7 +108,7 @@ export default {
         .on("zoom", zoom);
 
       var svg = d3
-        .select("#scatter")
+        .select("#zoomable")
         .append("svg")
         .attr("width", outerWidth)
         .attr("height", outerHeight)
@@ -193,45 +177,13 @@ export default {
         .append("circle")
         .classed("dot", true)
         .attr("r", function(d) {
-          // return 6 * Math.sqrt(d[rCat] / Math.PI);
           return 6;
         })
         .attr("transform", transform)
-        // .style("fill", function(d) {
-        //   return color(d[colorCat]);
-        // })
+
         .on("mouseover", tip.show)
         .on("mouseout", tip.hide)
         .on("click", this.getPipeline);
-
-      // d3.select("input").on("click", change);
-
-      // function change() {
-      //   xCat = "Carbs";
-      //   xMax = d3.max(data, function(d) {
-      //     return d[xCoor];
-      //   });
-      //   xMin = d3.min(data, function(d) {
-      //     return d[xCoor];
-      //   });
-
-      //   zoomBeh.x(x.domain([xMin, xMax])).y(y.domain([yMin, yMax]));
-
-      //   var svg = d3.select("#scatter").transition();
-
-      //   svg
-      //     .select(".x.axis")
-      //     .duration(750)
-      //     .call(xAxis)
-      //     .select(".label")
-      //     .text(xCat);
-
-      //   objects
-      //     .selectAll(".dot")
-      //     .transition()
-      //     .duration(1000)
-      //     .attr("transform", transform);
-      // }
 
       function zoom() {
         svg.select(".x.axis").call(xAxis);

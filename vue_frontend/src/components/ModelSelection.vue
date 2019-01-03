@@ -6,7 +6,6 @@
         <TradeSpace></TradeSpace>
       </div>
     </div>
-
     <div class="row">
       <div class="col-md-8">
         <PipelineView></PipelineView>
@@ -15,24 +14,6 @@
         <ModelType></ModelType>
       </div>
     </div>
-    <!-- <div class="row">
-      <div class="col-md-1">.col-md-1</div>
-      <div class="col-md-1">.col-md-1</div>
-      <div class="col-md-1">.col-md-1</div>
-      <div class="col-md-1">.col-md-1</div>
-      <div class="col-md-1">.col-md-1</div>
-      <div class="col-md-1">.col-md-1</div>
-      <div class="col-md-1">.col-md-1</div>
-      <div class="col-md-1">.col-md-1</div>
-      <div class="col-md-1">.col-md-1</div>
-      <div class="col-md-1">.col-md-1</div>
-      <div class="col-md-1">.col-md-1</div>
-      <div class="col-md-1">.col-md-1</div>
-    </div>
-    <div class="row">
-      <div class="col-md-8">.col-md-8</div>
-      <div class="col-md-4">.col-md-4</div>
-    </div>-->
   </div>
 </template>
 
@@ -41,6 +22,7 @@ import TradeSpace from "./TradeSpace/TradeSpace.vue";
 import PipelineView from "./PipelineView/PipelineView.vue";
 import ModelType from "./ModelType/ModelType.vue";
 export default {
+  name: "model selection",
   components: {
     TradeSpace,
     PipelineView,

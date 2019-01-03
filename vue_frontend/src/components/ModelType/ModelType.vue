@@ -10,7 +10,7 @@
 </template>
 
 <script>
-export default {};
+export default { name: "model type" };
 </script>
 
 <style scoped>

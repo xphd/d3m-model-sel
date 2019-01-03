@@ -8,6 +8,7 @@
 <script>
 import ZoomableScatterplot from "./ZoomableScatterplot.vue";
 export default {
+  name: "trade spece",
   data() {
     return {
       solutions: []
@@ -23,7 +24,6 @@ export default {
     },
     responseSolutions(solutions) {
       this.solutions = solutions;
-      // console.log(solutions[0]);
     }
   }
 };

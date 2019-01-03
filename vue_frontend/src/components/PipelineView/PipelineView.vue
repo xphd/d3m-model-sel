@@ -8,7 +8,7 @@
 <script>
 import FlowChart from "./FlowChart.vue";
 export default {
-  name: "app",
+  name: "pipeline view",
   data() {
     return {
       pipeline: {}

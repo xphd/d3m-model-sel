@@ -8,10 +8,15 @@
 <script>
 import ZoomableScatterplot from "./ZoomableScatterplot.vue";
 export default {
-  name: "trade spece",
+  name: "trade-spece",
   data() {
     return {
-      solutions: []
+      solutions: null
+      // solution = {
+      //   id:"",
+      //   score: ,
+      //   pipelineSize: ,
+      // }
     };
   },
   components: {
@@ -20,7 +25,7 @@ export default {
   sockets: {
     connect() {
       console.log("Client: Try to connect!");
-      this.$socket.emit("requestSolutions");
+      if (this.solution == null) this.$socket.emit("requestSolutions");
     },
     responseSolutions(solutions) {
       this.solutions = solutions;

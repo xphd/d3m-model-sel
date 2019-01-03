@@ -7,8 +7,15 @@
 
 <script>
 export default {
-  name: "flow chart",
+  name: "flow-chart",
   props: ["pipeline"],
+  data() {
+    return {
+      isPipelineShown: false,
+      // nodesPicked: [],
+      nodes: []
+    };
+  },
   watch: {
     pipeline: function() {
       this.visualizePipeline();
@@ -20,13 +27,7 @@ export default {
       });
     }
   },
-  data() {
-    return {
-      isPipelineShown: false,
-      // nodesPicked: [],
-      nodes: []
-    };
-  },
+
   methods: {
     visualizePipeline() {
       // console.log("visualize pipeline");

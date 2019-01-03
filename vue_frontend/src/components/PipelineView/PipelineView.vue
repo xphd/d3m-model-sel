@@ -8,7 +8,7 @@
 <script>
 import FlowChart from "./FlowChart.vue";
 export default {
-  name: "pipeline view",
+  name: "pipeline-view",
   data() {
     return {
       pipeline: {}
@@ -18,6 +18,7 @@ export default {
     FlowChart
   },
   sockets: {
+    // requestPipeline defined in ZoomableScatter.vue
     responsePipeline(pipeline) {
       this.pipeline = pipeline;
     }

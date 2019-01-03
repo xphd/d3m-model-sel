@@ -14,14 +14,18 @@ server.listen(9090);
 // data preparation
 // before socket communication
 // path can be others, only if the dir contains files named by solution_id
-const path = "./responses/getSearchSolutionsResultsResponses/";
+let path = "./responses/getSearchSolutionsResultsResponses/";
 const solutions = []; // each element is solution_id
 fs.readdirSync(path).forEach(filename => {
+  // filename looks like "1234-asdg-sdfd-xxx.json"
+  let solutionId = filename.split(".")[0];
   const solution = {
-    id: filename,
+    id: solutionId,
+    pipelineSize: 0,
     score: 0
   };
   solutions.push(solution); // filename is nothing but solution_id
+  // console.log(solution);
 });
 
 /*
@@ -42,44 +46,44 @@ serverSocket.on("connection", socket => {
   socket.on("requestSolutions", () => {
     console.log("Server: requestSolutions received");
 
-    // get scores
-    const path_scoreSolution = "./responses/scoreSolutionResponses/";
-    const path_getScoreSolution =
-      "./responses/getScoreSolutionResultsResponses/";
+    // get score(s)
+    let scoreSolutionPath = "./responses/scoreSolutionResponses/";
+    let getScoreSolutionPath = "./responses/getScoreSolutionResultsResponses/";
     solutions.forEach(solution => {
       let id = solution.id;
-      let tempObj = fs.readFileSync(path_scoreSolution + id, "utf-8");
+      let filename1 = scoreSolutionPath + id + ".json";
+      let tempObj = fs.readFileSync(filename1, "utf-8");
 
-      let tempObj2 = fs.readFileSync(
-        path_getScoreSolution + JSON.parse(tempObj).request_id + ".json",
-        "utf-8"
-      );
+      let request_id = JSON.parse(tempObj).request_id;
+      let filename2 = getScoreSolutionPath + request_id + ".json";
+      let tempObj2 = fs.readFileSync(filename2, "utf-8");
+
+      // hardcode at this moment
       let score = JSON.parse(tempObj2).scores[0].value.raw.double;
+
       solution.score = score;
     });
 
     // get pipelineSize
-    const path_describeSolution = "./responses/describeSolutionResponses/";
+    let describeSolutionPath = "./responses/describeSolutionResponses/";
     solutions.forEach(solution => {
       let id = solution.id;
-      let tempObj = fs.readFileSync(path_describeSolution + id, "utf-8");
+      let filename = describeSolutionPath + id + ".json";
+      let tempObj = fs.readFileSync(filename, "utf-8");
       let size = JSON.parse(tempObj).pipeline.steps.length;
       solution.pipelineSize = size;
     });
-    console.log(solutions[0]);
+
     socket.emit("responseSolutions", solutions);
   });
 
-  socket.on("requestPipeline", pipeline => {
-    console.log("Server: requestPipeline received");
-    console.log(pipeline);
-    // console.log(typeof pipeline);
-    const pipelinePath = "./responses/describeSolutionResponses/";
-    const pipelineStr = fs.readFileSync(pipelinePath + pipeline, "utf8");
-    const pipelineStrJSON = JSON.parse(pipelineStr);
-    const pipelineObj = pipelineStrJSON["pipeline"];
-    // console.log(pipelineObj);
-    console.log(pipelineObj.steps.length);
-    socket.emit("responsePipeline", pipelineObj);
+  socket.on("requestPipeline", solutionId => {
+    console.log("Server: requestPipeline: ", solutionId);
+    let pipelinePath = "./responses/describeSolutionResponses/";
+    let filename = pipelinePath + solutionId + ".json";
+    let pipelineStr = fs.readFileSync(filename, "utf8");
+    let pipelineStrJSON = JSON.parse(pipelineStr);
+    let pipeline = pipelineStrJSON["pipeline"];
+    socket.emit("responsePipeline", pipeline);
   });
 });

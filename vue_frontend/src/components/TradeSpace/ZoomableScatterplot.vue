@@ -1,47 +1,40 @@
 <template>
   <div>
-    <p>Scatter Plot!</p>
-
+    <p>Zoomable Scatterplot!</p>
     <div id="zoomable"></div>
   </div>
 </template>
-
 
 <script>
 import * as d3 from "d3v3";
 import d3Tip from "d3-tip";
 d3.tip = d3Tip;
 export default {
-  name: "zoomable scatterplot",
+  name: "zoomable-scatterplot",
   props: ["solutions"],
   data() {
     return {
-      selected: "",
       xCoor: "pipelineSize", // x-coordinate
       yCoor: "score" //
     };
   },
   watch: {
     solutions: function() {
-      console.log("getPoints");
-
-      this.getZoomableScatterplot();
+      this.getZoomableScatterplot(this.xCoor, this.yCoor);
     }
   },
   methods: {
     getPipeline(d) {
+      // d is the element of solutions, aka solution
       if (d) {
-        var id = d["id"];
-        console.log(id);
-        // responsePipeline in PipelineView.vue
-        this.$socket.emit("requestPipeline", id);
+        var solutionId = d["id"];
+        console.log(solutionId);
+        // responsePipeline defined in PipelineView.vue
+        this.$socket.emit("requestPipeline", solutionId);
       }
     },
-    getZoomableScatterplot() {
-      var xCoor = this.xCoor;
-      var yCoor = this.yCoor;
+    getZoomableScatterplot(xCoor, yCoor) {
       console.log("getZoomableScatterplot");
-
       var margin = { top: 50, right: 300, bottom: 50, left: 50 },
         outerWidth = 1050,
         outerHeight = 500,
@@ -58,7 +51,9 @@ export default {
         .range([height, 0])
         .nice();
 
+      // shorthand notation
       var data = this.solutions;
+
       var xMax =
           d3.max(data, function(d) {
             return d[xCoor];
@@ -97,7 +92,6 @@ export default {
         .offset([-10, 0])
         .html(function(d) {
           return "x: " + d[xCoor] + "<br>" + "y: " + d[yCoor];
-          // return "Hello";
         });
 
       var zoomBeh = d3.behavior
@@ -180,15 +174,14 @@ export default {
           return 6;
         })
         .attr("transform", transform)
-
         .on("mouseover", tip.show)
         .on("mouseout", tip.hide)
+        // once clicked, request pipeline associated with this point (solution)
         .on("click", this.getPipeline);
 
       function zoom() {
         svg.select(".x.axis").call(xAxis);
         svg.select(".y.axis").call(yAxis);
-
         svg.selectAll(".dot").attr("transform", transform);
       }
 
@@ -238,7 +231,7 @@ rect {
   box-sizing: border-box;
   display: inline;
   font-size: 10px;
-  width: 100%;
+  /* width: 100%; */
   line-height: 1;
   color: rgba(0, 0, 0, 0.8);
   content: "\25BC";

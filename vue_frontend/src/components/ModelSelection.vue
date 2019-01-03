@@ -22,7 +22,7 @@ import TradeSpace from "./TradeSpace/TradeSpace.vue";
 import PipelineView from "./PipelineView/PipelineView.vue";
 import ModelType from "./ModelType/ModelType.vue";
 export default {
-  name: "model selection",
+  name: "model-selection",
   components: {
     TradeSpace,
     PipelineView,

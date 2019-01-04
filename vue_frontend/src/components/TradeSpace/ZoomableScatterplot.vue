@@ -127,7 +127,7 @@ export default {
         .attr("x", width)
         .attr("y", margin.bottom - 10)
         .style("text-anchor", "end")
-        .text("xCat");
+        .text(xCoor);
 
       svg
         .append("g")
@@ -139,7 +139,7 @@ export default {
         .attr("y", -margin.left)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text("yCat");
+        .text(yCoor);
 
       var objects = svg
         .append("svg")

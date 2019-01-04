@@ -1,27 +1,33 @@
 <template>
   <div>
     <p>Pipeline View</p>
-    <FlowChart :pipeline="pipeline"></FlowChart>
+    <DagreGraph :nodes="nodes" :edges="edges"/>
   </div>
 </template>
 
 <script>
-import FlowChart from "./FlowChart.vue";
+import DagreGraph from "./DagreGraph.vue";
 export default {
   name: "pipeline-view",
   data() {
     return {
-      pipeline: {}
+      // pipeline: {},
+      nodes: [],
+      edges: []
     };
   },
   components: {
-    FlowChart
+    DagreGraph
   },
   sockets: {
     // requestPipeline defined in ZoomableScatter.vue
     responsePipeline(pipeline) {
-      this.pipeline = pipeline;
+      // this.pipeline = pipeline;
+      this.init(pipeline);
     }
+  },
+  methods: {
+    init(pipeline) {}
   }
 };
 </script>

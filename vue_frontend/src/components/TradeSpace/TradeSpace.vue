@@ -29,6 +29,7 @@ export default {
     },
     responseSolutions(solutions) {
       this.solutions = solutions;
+      // console.log(solutions.length);
     }
   }
 };

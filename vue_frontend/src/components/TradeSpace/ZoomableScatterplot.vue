@@ -21,6 +21,7 @@ export default {
   watch: {
     solutions: function() {
       this.getZoomableScatterplot(this.xCoor, this.yCoor);
+      console.log(this.solutions);
     }
   },
   methods: {

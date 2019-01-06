@@ -27,6 +27,7 @@ export default {
       // this.init();
     }
   },
+
   methods: {
     init(pipeline) {
       const elementId = { id: 0 };
@@ -40,6 +41,7 @@ export default {
           return;
         }
         let steps = pipeline.steps;
+
         for (let i = 0; i < steps.length; i++) {
           let step = steps[i];
           let name = step["primitive"]["primitive"]["name"];
@@ -48,26 +50,32 @@ export default {
             id: id,
             state: "success",
             value: {
-              label: name
+              label: id + ": " + name
             }
           };
-          let edge = {
-            from: id,
-            to: id + 1
-          };
+
+          nodes.push(node);
+          elementId.id += 1;
 
           if (i == steps.length - 1 && !step.pipeline) {
             // node.next = [];
           } else {
+            let edge = {
+              from: id,
+              to: id + 1
+            };
             edges.push(edge);
           }
-          nodes.push(node);
-
-          elementId.id += 1;
 
           if (step.pipeline) {
+            let cur = id;
             branch(step.pipeline, nodes, edges, elementId);
             // node.next.push(elementId.id);
+            let nxt = elementId.id;
+            let edge = {
+              from: cur,
+              to: nxt
+            };
             edges.push(edge);
           }
         }

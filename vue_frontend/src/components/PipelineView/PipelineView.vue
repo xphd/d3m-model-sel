@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>Pipeline View</p>
-    <DagreGraph :nodes="nodes" :edges="edges"/>
+    <DagreGraph v-if="flag" :nodes="nodes" :edges="edges"/>
   </div>
 </template>
 
@@ -13,7 +13,8 @@ export default {
     return {
       // pipeline: {},
       nodes: [],
-      edges: []
+      edges: [],
+      flag: false
     };
   },
   components: {
@@ -23,8 +24,12 @@ export default {
     // requestPipeline defined in ZoomableScatter.vue
     responsePipeline(pipeline) {
       // this.pipeline = pipeline;
+      this.flag = false;
       this.init(pipeline);
       // this.init();
+      this.$nextTick(() => {
+        this.flag = true;
+      });
     }
   },
 
@@ -33,7 +38,8 @@ export default {
       const elementId = { id: 0 };
       // this.isPipelineShown = true;
       // this.nodesPicked = [];
-      // this.nodes = [];
+      this.nodes = [];
+      this.edges = [];
       branch(pipeline, this.nodes, this.edges, elementId);
 
       function branch(pipeline, nodes, edges, elementId) {

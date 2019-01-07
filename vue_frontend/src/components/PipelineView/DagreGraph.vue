@@ -9,7 +9,6 @@
       <button @click="zoomCtrl(0)" class="zoom">Zoom out</button>
       <button @click="zoomCtrl(1)">Zoom in</button>
     </div>
-
     <svg class="dagre">
       <g class="container"></g>
     </svg>
@@ -21,14 +20,14 @@ import * as d3 from "d3";
 import dagreD3 from "dagre-d3";
 let container = null;
 export default {
-  name: "dagre-graph",
+  name: "DagreGraph",
   props: ["nodes", "edges"],
   data() {
     return {
       id: "",
-      renderer: null,
-      graph: null,
-      direction: "TB",
+      renderer: null, // new dagreD3.render();
+      graph: null, // new dagreD3.graphlib.Graph()
+      direction: "LR",
       directions: [
         {
           prop: "LR",
@@ -50,22 +49,9 @@ export default {
       zoom: null,
       containerId: "",
       width: 0,
-      height: 0
+      height: 0,
+      nodesMap: null
     };
-  },
-  watch: {
-    nodes() {
-      this.strokeNodes();
-    },
-    edges() {
-      this.strokeEdges();
-    },
-    direction() {
-      this.graph.setGraph({
-        rankdir: this.direction
-      });
-      this.renderer(container, this.graph);
-    }
   },
   created() {
     this.containerId = this.getId();
@@ -76,6 +62,15 @@ export default {
       .setDefaultEdgeLabel(function() {
         return {};
       });
+
+    let nodes = this.nodes;
+    this.nodesMap = new Map();
+    let nodesMap = this.nodesMap;
+    // console.log(nodes.length);
+    nodes.forEach(node => {
+      let id = node["id"];
+      nodesMap.set(id, node);
+    });
   },
   methods: {
     getId() {
@@ -122,7 +117,6 @@ export default {
         } else if (item.value.operator === "JoinOperator") {
           shape = "circle";
         }
-
         this.graph.setNode(item.id, {
           label: item.value.label,
           shape: shape,
@@ -161,7 +155,7 @@ export default {
     container = svg.select("g.container");
     // transform
     const transform = d3.zoomIdentity
-      .translate(this.width / 3, this.height / 6)
+      // .translate(this.width / 3, this.height / 6)
       .scale(1);
     this.zoom = d3
       .zoom()
@@ -172,9 +166,52 @@ export default {
       .duration(750)
       .call(this.zoom.transform, transform);
     svg.call(this.zoom);
-
     this.strokeNodes();
     this.strokeEdges();
+    // once a node is clicked or mouse over, do somthing
+
+    var tooltip = d3
+      .select("body")
+      .append("div")
+      .attr("class", "tooltip")
+      .style("opacity", 0);
+
+    let nodesMap = this.nodesMap;
+    // console.log(nodesMap);
+    d3.selectAll("svg g.node")
+      .on("click", idString => {
+        let id = +idString; // convert string to int
+        // console.log(JSON.stringify(nodesMap.get(id)));
+        tooltip
+          .transition()
+          .duration(200)
+          .style("opacity", 0.9);
+        tooltip
+          .html(JSON.stringify(nodesMap.get(id)))
+          .style("left", d3.event.pageX + 5 + "px")
+          .style("top", d3.event.pageY - 28 + "px");
+        // .style("background", "black");
+      })
+      .on("mouseout", () => {
+        tooltip
+          .transition()
+          .duration(500)
+          .style("opacity", 0);
+      });
+  },
+  watch: {
+    nodes() {
+      this.strokeNodes();
+    },
+    edges() {
+      this.strokeEdges();
+    },
+    direction() {
+      this.graph.setGraph({
+        rankdir: this.direction
+      });
+      this.renderer(container, this.graph);
+    }
   }
 };
 </script>

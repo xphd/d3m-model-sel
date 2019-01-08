@@ -181,7 +181,7 @@ export default {
     d3.selectAll("svg g.node")
       .on("click", idString => {
         let id = +idString; // convert string to int
-        // console.log(JSON.stringify(nodesMap.get(id)));
+        console.log(JSON.stringify(nodesMap.get(id)));
         tooltip
           .transition()
           .duration(200)

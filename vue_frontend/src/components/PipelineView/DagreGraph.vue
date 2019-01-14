@@ -31,19 +31,19 @@ export default {
       directions: [
         {
           prop: "LR",
-          label: "从左至右"
+          label: "Left to Right"
         },
         {
           prop: "RL",
-          label: "从右至左"
+          label: "Right to Left"
         },
         {
           prop: "TB",
-          label: "从上至下"
+          label: "Up to Down"
         },
         {
           prop: "BT",
-          label: "从下至上"
+          label: "Down to Up"
         }
       ],
       zoom: null,

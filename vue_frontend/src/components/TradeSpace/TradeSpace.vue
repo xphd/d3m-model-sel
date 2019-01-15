@@ -1,7 +1,16 @@
 <template>
   <div>
     <p>Trade Space</p>
-    <ZoomableScatterplot :solutions="solutions"/>
+    <component
+      :is="'ZoomableScatterplot'"
+      v-for="(coordinate,i) in coordinates"
+      :coordinate="coordinate"
+      :solutions="solutions"
+      :index="i"
+      :key="i"
+    ></component>
+
+    <button @click="addPlot">Add One More Plot</button>
   </div>
 </template>
 
@@ -11,14 +20,21 @@ export default {
   name: "trade-spece",
   data() {
     return {
-      solutions: null
-      // solution = {
-      //   id:"",
-      //   score: ,
-      //   pipelineSize: ,
-      // }
+      solutions: null,
+      coordinates: [
+        { xCoor: "pipelineSize", yCoor: "score" },
+        { xCoor: "pipelineSize", yCoor: "score" }
+      ]
     };
   },
+
+  methods: {
+    addPlot() {
+      console.log("addPlot");
+      this.coordinates.push({ xCoor: "pipelineSize", yCoor: "score" });
+    }
+  },
+
   components: {
     ZoomableScatterplot
   },

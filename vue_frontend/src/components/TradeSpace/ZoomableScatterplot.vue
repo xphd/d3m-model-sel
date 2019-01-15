@@ -1,7 +1,7 @@
 <template>
   <div>
     <p>Zoomable Scatterplot!</p>
-    <div id="zoomable"></div>
+    <div :id="id"></div>
   </div>
 </template>
 
@@ -11,17 +11,23 @@ import d3Tip from "d3-tip";
 d3.tip = d3Tip;
 export default {
   name: "zoomable-scatterplot",
-  props: ["solutions"],
+  props: ["solutions", "coordinate", "index"],
   data() {
     return {
-      xCoor: "pipelineSize", // x-coordinate
-      yCoor: "score" //
+      xCoor: this.coordinate.xCoor, // x-coordinate
+      yCoor: this.coordinate.yCoor, //
+      id: "zoomable-" + this.index
     };
   },
   watch: {
     solutions: function() {
       this.getZoomableScatterplot(this.xCoor, this.yCoor);
       console.log(this.solutions);
+    }
+  },
+  mounted() {
+    if (this.solutions) {
+      this.getZoomableScatterplot(this.xCoor, this.yCoor);
     }
   },
   methods: {
@@ -102,8 +108,9 @@ export default {
         .scaleExtent([0, 500])
         .on("zoom", zoom);
 
+      console.log(this.id);
       var svg = d3
-        .select("#zoomable")
+        .select("#" + this.id)
         .append("svg")
         .attr("width", outerWidth)
         .attr("height", outerHeight)

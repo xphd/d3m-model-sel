@@ -1,12 +1,6 @@
 # Project setup
 
-## node_middleware
-
-```
-npm install
-```
-
-## vue_frontend
+## Inside node_middleware AND vue_frontend
 
 ```
 yarn

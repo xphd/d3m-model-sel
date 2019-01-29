@@ -103,7 +103,7 @@ serverSocket.on("connection", socket => {
       let timeProduce = diff_seconds + diff_nanos * Math.pow(10, -9);
 
       solution.timeProduce = timeProduce;
-      console.log(timeProduce);
+      // console.log(timeProduce);
     });
 
     socket.emit("responseSolutions", solutions);

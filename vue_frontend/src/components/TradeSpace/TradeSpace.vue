@@ -1,7 +1,6 @@
 <template>
   <div>
     <p>Trade Space</p>
-
     <component
       :is="'ZoomableScatterplot'"
       v-for="(coordinate,i) in coordinates"
@@ -10,6 +9,8 @@
       :index="i"
       :key="i"
     ></component>
+
+    <button @click="addPlot">Add One More Plot</button>
   </div>
 </template>
 
@@ -19,32 +20,43 @@ export default {
   name: "trade-spece",
   data() {
     return {
-      solutions: null,
-      coordinates: [
-        { xCoor: "pipelineSize", yCoor: "score" },
-        { xCoor: "timeProduce", yCoor: "score" }
-      ]
+      solutions: [],
+      coordinates: []
     };
   },
-
   methods: {
     addPlot() {
       console.log("addPlot");
       this.coordinates.push({ xCoor: "pipelineSize", yCoor: "score" });
+      // this.coordinates.push({ xCoor: "timeProduce", yCoor: "score" });
     }
   },
-
+  watch: {
+    solutions() {
+      if (this.solutions.length != 0) {
+        this.addPlot();
+      }
+    }
+  },
   components: {
     ZoomableScatterplot
   },
   sockets: {
     connect() {
       console.log("Client: Try to connect!");
-      if (this.solution == null) this.$socket.emit("requestSolutions");
+      if (this.solutions == null) this.$socket.emit("requestSolutions");
     },
     responseSolutions(solutions) {
+      console.log("responseSolutions");
       this.solutions = solutions;
       // console.log(solutions.length);
+    }
+  },
+  mounted() {
+    console.log("TradeSpace mounted()");
+    if (this.solutions.length == 0) {
+      console.log("requestSolutions");
+      this.$socket.emit("requestSolutions");
     }
   }
 };

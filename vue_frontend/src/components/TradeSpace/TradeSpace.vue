@@ -1,6 +1,7 @@
 <template>
   <div>
     <p>Trade Space</p>
+
     <component
       :is="'ZoomableScatterplot'"
       v-for="(coordinate,i) in coordinates"
@@ -9,8 +10,6 @@
       :index="i"
       :key="i"
     ></component>
-
-    <button @click="addPlot">Add One More Plot</button>
   </div>
 </template>
 

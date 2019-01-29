@@ -1,6 +1,7 @@
 <template>
   <div>
     <p>Zoomable Scatterplot!</p>
+
     <div :id="id"></div>
   </div>
 </template>
@@ -125,6 +126,12 @@ export default {
         .attr("width", width)
         .attr("height", height);
 
+      let xAxisName = xCoor;
+      if (xCoor == "timeProduce") {
+        xAxisName = "Time Produce (s)";
+      } else if (xCoor == "pipelineSize") {
+        xAxisName = "Pipeline Size";
+      }
       svg
         .append("g")
         .classed("x axis", true)
@@ -135,8 +142,12 @@ export default {
         .attr("x", width)
         .attr("y", margin.bottom - 10)
         .style("text-anchor", "end")
-        .text(xCoor);
+        .text(xAxisName);
 
+      let yAxisName = yCoor;
+      if (yCoor == "score") {
+        yAxisName = "F1";
+      }
       svg
         .append("g")
         .classed("y axis", true)
@@ -147,7 +158,7 @@ export default {
         .attr("y", -margin.left)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text(yCoor);
+        .text(yAxisName);
 
       var objects = svg
         .append("svg")

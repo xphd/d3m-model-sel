@@ -22,8 +22,8 @@ export default {
     return {
       solutions: null,
       coordinates: [
-        { xCoor: "pipelineSize", yCoor: "score" }
-        // { xCoor: "pipelineSize", yCoor: "score" }
+        { xCoor: "pipelineSize", yCoor: "score" },
+        { xCoor: "timeProduce", yCoor: "score" }
       ]
     };
   },

@@ -1,1 +1,21 @@
-{"progress":{"state":"COMPLETED","status":"","start":{"seconds":"1548744565","nanos":996723000},"end":{"seconds":"1548744567","nanos":777339000}},"steps":[],"exposed_outputs":{"steps.0.produce":{"value":"csv_uri","error":null,"raw":null,"dataset_uri":"","csv_uri":"file:///output/exposed_outputs/bfee0847-62d8-4af9-96ba-2dd741e29c6a/1bad7271-71e6-4191-a287-613f1167ddab.steps.0.produce.csv","pickle_uri":"","pickle_blob":{"type":"Buffer","data":[]},"plasma_id":{"type":"Buffer","data":[]}}}}
+{
+  "progress": {
+    "state": "COMPLETED",
+    "status": "",
+    "start": { "seconds": "1548744565", "nanos": 996723000 },
+    "end": { "seconds": "1548744567", "nanos": 777339000 }
+  },
+  "steps": [],
+  "exposed_outputs": {
+    "steps.0.produce": {
+      "value": "csv_uri",
+      "error": null,
+      "raw": null,
+      "dataset_uri": "",
+      "csv_uri": "file:///output/exposed_outputs/bfee0847-62d8-4af9-96ba-2dd741e29c6a/1bad7271-71e6-4191-a287-613f1167ddab.steps.0.produce.csv",
+      "pickle_uri": "",
+      "pickle_blob": { "type": "Buffer", "data": [] },
+      "plasma_id": { "type": "Buffer", "data": [] }
+    }
+  }
+}

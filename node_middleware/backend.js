@@ -74,6 +74,38 @@ serverSocket.on("connection", socket => {
       solution.pipelineSize = size;
     });
 
+    // get timeProduce(s)
+    let produceSolutionPath = "./responses/produceSolutionResponses/";
+    let getProduceSolutionPath =
+      "./responses/getProduceSolutionResultsResponses/";
+    solutions.forEach(solution => {
+      let id = solution.id;
+      let filename1 = produceSolutionPath + id + ".json";
+      let tempObj = fs.readFileSync(filename1, "utf-8");
+
+      let request_id = JSON.parse(tempObj).request_id;
+      let filename2 = getProduceSolutionPath + request_id + ".json";
+      let tempObj2 = fs.readFileSync(filename2, "utf-8");
+
+      // hardcode at this moment
+      let start_seconds_str = JSON.parse(tempObj2).progress.start.seconds;
+      let end_seconds_str = JSON.parse(tempObj2).progress.end.seconds;
+
+      let start_seconds = parseInt(start_seconds_str);
+      let end_seconds = parseInt(end_seconds_str);
+
+      let start_nanos = JSON.parse(tempObj2).progress.start.nanos;
+      let end_nanos = JSON.parse(tempObj2).progress.end.nanos;
+
+      let diff_seconds = end_seconds - start_seconds;
+      let diff_nanos = end_nanos - start_nanos;
+
+      let timeProduce = diff_seconds + diff_nanos * Math.pow(10, -9);
+
+      solution.timeProduce = timeProduce;
+      console.log(timeProduce);
+    });
+
     socket.emit("responseSolutions", solutions);
   });
 

@@ -1,9 +1,9 @@
 <template>
   <div>
     <p>Zoomable Scatterplot!</p>
-    <v-app id="inspire">
-      <!-- <v-container fluid grid-list-xl> -->
-      <v-layout wrap align-center>
+    <!-- <v-app id="inspire"> -->
+    <!-- <v-container fluid grid-list-xl> -->
+    <!-- <v-layout wrap align-center>
         <v-flex xs12 sm6 d-flex>
           <v-select :items="items" label="X Axis"></v-select>
         </v-flex>
@@ -11,9 +11,9 @@
         <v-flex xs12 sm6 d-flex>
           <v-select :items="items" box label="Y Axis"></v-select>
         </v-flex>
-      </v-layout>
-      <!-- </v-container> -->
-    </v-app>
+    </v-layout>-->
+    <!-- </v-container> -->
+    <!-- </v-app> -->
     <div :id="id"></div>
   </div>
 </template>

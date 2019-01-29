@@ -1,12 +1,13 @@
 <template>
   <div :id="containerId" class="container dagre-graph-container">
     <div class="zoom-div">
-      <button class="btn btn-primary"
+      <button
+        class="btn btn-primary"
         v-for="item in directions"
         :key="item.prop"
         @click="direction = item.prop"
       >{{item.label}}</button>
-      <button @click="zoomCtrl(0)" class="zoom" >Zoom out</button>
+      <button @click="zoomCtrl(0)" class="zoom">Zoom out</button>
       <button @click="zoomCtrl(1)">Zoom in</button>
     </div>
     <svg class="dagre">
@@ -187,10 +188,11 @@ export default {
           .duration(200)
           .style("opacity", 0.9);
         tooltip
-          .html(JSON.stringify(nodesMap.get(id)))
+          // .html(JSON.stringify(nodesMap.get(id)))
+          .html(nodesMap.get(id).info)
           .style("left", d3.event.pageX + 5 + "px")
-          .style("top", d3.event.pageY - 28 + "px");
-        // .style("background", "black");
+          .style("top", d3.event.pageY - 28 + "px")
+          .style("background", "grey");
       })
       .on("mouseout", () => {
         tooltip

@@ -1,12 +1,12 @@
 <template>
   <div :id="containerId" class="container dagre-graph-container">
     <div class="zoom-div">
-      <button
+      <button class="btn btn-primary"
         v-for="item in directions"
         :key="item.prop"
         @click="direction = item.prop"
       >{{item.label}}</button>
-      <button @click="zoomCtrl(0)" class="zoom">Zoom out</button>
+      <button @click="zoomCtrl(0)" class="zoom" >Zoom out</button>
       <button @click="zoomCtrl(1)">Zoom in</button>
     </div>
     <svg class="dagre">

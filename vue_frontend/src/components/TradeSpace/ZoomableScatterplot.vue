@@ -1,19 +1,20 @@
 <template>
   <div>
     <p>Zoomable Scatterplot!</p>
-    <!-- <v-app id="inspire"> -->
-    <!-- <v-container fluid grid-list-xl> -->
-    <!-- <v-layout wrap align-center>
-        <v-flex xs12 sm6 d-flex>
-          <v-select :items="items" label="X Axis"></v-select>
-        </v-flex>
+    <!-- <v-app id="inspire">
+      <v-container fluid grid-list-m>
+        <v-layout wrap align-center>
+          <v-flex xs12 sm6 d-flex>
+            <v-select :items="items" label="X Axis" v-model="xCoor"></v-select>
+          </v-flex>
 
-        <v-flex xs12 sm6 d-flex>
-          <v-select :items="items" box label="Y Axis"></v-select>
-        </v-flex>
-    </v-layout>-->
-    <!-- </v-container> -->
-    <!-- </v-app> -->
+          <v-flex xs12 sm6 d-flex>
+            <v-select :items="items" box label="Y Axis" v-model="yCoor"></v-select>
+          </v-flex>
+        </v-layout>
+        
+      </v-container>
+    </v-app>-->
     <div :id="id"></div>
   </div>
 </template>
@@ -30,14 +31,16 @@ export default {
       xCoor: this.coordinate.xCoor, // x-coordinate
       yCoor: this.coordinate.yCoor, //
       id: "zoomable-" + this.index,
-      items: ["pipelineSize", "score"],
-      solutions: null
+      items: ["pipelineSize", "score"]
     };
   },
   watch: {
     solutions: function() {
       this.getZoomableScatterplot(this.xCoor, this.yCoor);
       console.log(this.solutions);
+    },
+    xCoor: function() {
+      this.getZoomableScatterplot(this.xCoor, this.yCoor);
     }
   },
   mounted() {
@@ -57,9 +60,9 @@ export default {
     },
     getZoomableScatterplot(xCoor, yCoor) {
       // console.log("getZoomableScatterplot");
-      var margin = { top: 50, right: 300, bottom: 50, left: 50 },
-        outerWidth = 1050,
-        outerHeight = 500,
+      var margin = { top: 50, right: 50, bottom: 50, left: 50 },
+        outerWidth = 700,
+        outerHeight = 400,
         width = outerWidth - margin.left - margin.right,
         height = outerHeight - margin.top - margin.bottom;
 
@@ -142,9 +145,11 @@ export default {
 
       let xAxisName = xCoor;
       if (xCoor == "timeProduce") {
-        xAxisName = "Time Produce (s)";
+        xAxisName = "Time in Produce model/second";
       } else if (xCoor == "pipelineSize") {
         xAxisName = "Pipeline Size";
+      } else if (xCoor == "timeFit") {
+        xAxisName = "Time in Fit Model/second";
       }
       svg
         .append("g")
@@ -210,7 +215,10 @@ export default {
         .on("mouseover", tip.show)
         .on("mouseout", tip.hide)
         // once clicked, request pipeline associated with this point (solution)
-        .on("click", this.getPipeline);
+        .on("click", this.getPipeline)
+        .on("mouseover", () => {
+          console.log("mouseover");
+        });
 
       function zoom() {
         svg.select(".x.axis").call(xAxis);

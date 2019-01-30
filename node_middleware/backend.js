@@ -106,6 +106,33 @@ serverSocket.on("connection", socket => {
       // console.log(timeProduce);
     });
 
+    // get timeFit(s)
+    let getFitSolutionPath = "./responses/getFitSolutionResultsResponses/";
+    solutions.forEach(solution => {
+      let id = solution.id;
+      let filename = getFitSolutionPath + id + ".json";
+
+      let tempObj = fs.readFileSync(filename, "utf-8");
+
+      // hardcode at this moment
+      let start_seconds_str = JSON.parse(tempObj).progress.start.seconds;
+      let end_seconds_str = JSON.parse(tempObj).progress.end.seconds;
+
+      let start_seconds = parseInt(start_seconds_str);
+      let end_seconds = parseInt(end_seconds_str);
+
+      let start_nanos = JSON.parse(tempObj).progress.start.nanos;
+      let end_nanos = JSON.parse(tempObj).progress.end.nanos;
+
+      let diff_seconds = end_seconds - start_seconds;
+      let diff_nanos = end_nanos - start_nanos;
+
+      let timeFit = diff_seconds + diff_nanos * Math.pow(10, -9);
+
+      solution.timeFit = timeFit;
+      // console.log(timeFit);
+    });
+
     socket.emit("responseSolutions", solutions);
   });
 

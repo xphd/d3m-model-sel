@@ -1,6 +1,6 @@
 <template>
   <div :id="containerId" class="container dagre-graph-container">
-    <div class="zoom-div">
+    <!-- <div class="zoom-div">
       <button
         class="btn btn-primary"
         v-for="item in directions"
@@ -9,7 +9,7 @@
       >{{item.label}}</button>
       <button @click="zoomCtrl(0)" class="zoom">Zoom out</button>
       <button @click="zoomCtrl(1)">Zoom in</button>
-    </div>
+    </div>-->
     <svg class="dagre">
       <g class="container"></g>
     </svg>
@@ -152,7 +152,8 @@ export default {
       .select(this.$el)
       .select("svg.dagre")
       .attr("width", this.width)
-      .attr("height", this.height);
+      .attr("height", this.height)
+      .attr("transform", "translate(50,0)");
     container = svg.select("g.container");
     // transform
     const transform = d3.zoomIdentity

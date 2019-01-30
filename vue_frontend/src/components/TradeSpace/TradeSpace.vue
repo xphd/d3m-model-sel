@@ -1,20 +1,29 @@
 <template>
   <div>
     <p>Trade Space</p>
-    <component
+    <div class="row">
+      <div class="col-sm-6" v-for="(coordinate,i) in coordinates" :key="i">
+        <component
+          :is="'ZoomableScatterplot'"
+          :coordinate="coordinate"
+          :solutions="solutions"
+          :index="i"
+        ></component>
+      </div>
+    </div>
+    <!-- <component
       :is="'ZoomableScatterplot'"
       v-for="(coordinate,i) in coordinates"
       :coordinate="coordinate"
       :solutions="solutions"
       :index="i"
       :key="i"
-    ></component>
-
-    <button @click="addPlot">Add One More Plot</button>
+    ></component>-->
   </div>
 </template>
 
 <script>
+// import Coordinate from "./Coordinate.vue";
 import ZoomableScatterplot from "./ZoomableScatterplot.vue";
 export default {
   name: "trade-spece",
@@ -27,8 +36,9 @@ export default {
   methods: {
     addPlot() {
       console.log("addPlot");
-      this.coordinates.push({ xCoor: "pipelineSize", yCoor: "score" });
-      // this.coordinates.push({ xCoor: "timeProduce", yCoor: "score" });
+      // this.coordinates.push({ xCoor: "pipelineSize", yCoor: "score" });
+      this.coordinates.push({ xCoor: "timeProduce", yCoor: "score" });
+      this.coordinates.push({ xCoor: "timeFit", yCoor: "score" });
     }
   },
   watch: {
@@ -39,6 +49,7 @@ export default {
     }
   },
   components: {
+    // Coordinate,
     ZoomableScatterplot
   },
   sockets: {

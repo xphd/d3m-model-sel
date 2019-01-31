@@ -30,21 +30,25 @@ export default {
   data() {
     return {
       solutions: [],
-      coordinates: []
+      coordinates: [],
+      xCoors:["timeProduce","timeFit"],
+      yCoors:[]
     };
   },
   methods: {
-    addPlot() {
+    addPlot(xCoor,yCoor) {
       console.log("addPlot");
       // this.coordinates.push({ xCoor: "pipelineSize", yCoor: "score" });
-      this.coordinates.push({ xCoor: "timeProduce", yCoor: "score" });
-      this.coordinates.push({ xCoor: "timeFit", yCoor: "score" });
+      // this.coordinates.push({ xCoor: "timeProduce", yCoor: "score" });
+      // this.coordinates.push({ xCoor: "timeFit", yCoor: "score" });
+      this.coordinates.push({ xCoor: xCoor, yCoor: yCoor });
     }
   },
   watch: {
     solutions() {
       if (this.solutions.length != 0) {
-        this.addPlot();
+        this.addPlot("timeProduce",this.yCoors[0]);
+        this.addPlot("timeFit",this.yCoors[0]);
       }
     }
   },
@@ -60,7 +64,11 @@ export default {
     responseSolutions(solutions) {
       console.log("responseSolutions");
       this.solutions = solutions;
+      // console.log(solutions)
       // console.log(solutions.length);
+      // this.yCoors.push(solutions[0].scores.getKey())
+      // console.log( Object.keys(solutions[0].scores))
+      this.yCoors = Object.keys(solutions[0].scores)
     }
   },
   mounted() {

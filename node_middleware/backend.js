@@ -24,7 +24,7 @@ fs.readdirSync(path).forEach(filename => {
     pipelineSize: 0,
     timeProduce: 0,
     timeFit: 0,
-    scores: []
+    scores: {}
   };
   solutions.push(solution); // filename is nothing but solution_id
   // console.log(solution);
@@ -64,9 +64,11 @@ serverSocket.on("connection", socket => {
       let scoreType = JSON.parse(tempObj2).scores[0].metric.metric;
       let scoreValue = JSON.parse(tempObj2).scores[0].value.raw.double;
 
-      let score = { scoreType: scoreType, socreValue: scoreValue };
+      let scores = {
+        [scoreType]:scoreValue}
 
-      solution.scores.push(score);
+      solution.scores=scores;
+      console.log(scores)
     });
 
     // get pipelineSize

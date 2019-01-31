@@ -79,10 +79,10 @@ export default {
         xMin = xMin > 0 ? 0 : xMin,
         yMax =
           d3.max(data, function(d) {
-            return d[yCoor];
+            return d["scores"][yCoor]
           }) * 1.05,
         yMin = d3.min(data, function(d) {
-          return d[yCoor];
+          return d["scores"][yCoor];
         }),
         yMin = yMin > 0 ? 0 : yMin;
       x.domain([xMin, xMax]);
@@ -102,7 +102,7 @@ export default {
         .attr("class", "d3-tip")
         .offset([-10, 0])
         .html(function(d) {
-          return xCoor + ": " + d[xCoor] + "<br>" + yCoor + ": " + d[yCoor];
+          return xCoor + ": " + d[xCoor] + "<br>" + yCoor + ": " + d["scores"][yCoor];
         });
 
       var zoomBeh = d3.behavior
@@ -252,7 +252,7 @@ export default {
         svg.selectAll(".dot").attr("transform", transform);
       }
       function transform(d) {
-        return "translate(" + x(d[xCoor]) + "," + y(d[yCoor]) + ")";
+        return "translate(" + x(d[xCoor]) + "," + y(d["scores"][yCoor]) + ")";
       }
     }
   }

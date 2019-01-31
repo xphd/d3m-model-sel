@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>Trade Space</p>
+    <p>Trade Space</p>    
     <div class="row">
       <div class="col-sm-6" v-for="(coordinate,i) in coordinates" :key="i">
         <component
@@ -19,6 +19,10 @@
       :index="i"
       :key="i"
     ></component>-->
+    <ul v-for="(solution,i) in solutions" :key="i">
+      <li :class="'cl-'+ solution.id">{{solution.id}}</li>
+    </ul>
+    
   </div>
 </template>
 

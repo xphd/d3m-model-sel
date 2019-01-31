@@ -1,6 +1,8 @@
 import Vue from "vue";
 import App from "./App.vue";
 
+import store from "./store";
+
 import JsonViewer from "vue-json-viewer";
 
 import Vuetify from "vuetify";
@@ -25,5 +27,6 @@ Vue.use(JsonViewer);
 Vue.config.productionTip = false;
 
 new Vue({
-  render: h => h(App)
+  render: h => h(App),
+  store
 }).$mount("#app");

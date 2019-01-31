@@ -14,11 +14,9 @@ export default {
   props: ["solutions", "coordinate", "index"],
   data() {
     return {
-      xCoor: this.coordinate.xCoor, // x-coordinate
+      xCoor: this.coordinate.xCoor, // 
       yCoor: this.coordinate.yCoor, //
-      id: "zoomable-" + this.index,
-      // seletedPoint: "",
-      // svgObjects: null
+      id: "zoomable-" + this.index,    
       selectedSolutions: new Set()
     };
   },
@@ -26,13 +24,7 @@ export default {
     solutions: function() {
       this.getZoomableScatterplot(this.xCoor, this.yCoor);
       console.log(this.solutions);
-    }
-    // selectedSolutions: function() {
-    //   console.log("selectedPoint is called");
-    //   // d3.select("#" + this.seletedPoint.id).style("fill", "red");
-    //   console.log("cl-" + this.seletedPoint.id);
-    //   d3.selectAll(".cl-" + this.seletedPoint.id).style("fill", "red");
-    // }
+    }  
   },
   mounted() {
     if (this.solutions) {
@@ -108,7 +100,7 @@ export default {
         .attr("class", "d3-tip")
         .offset([-10, 0])
         .html(function(d) {
-          return "x: " + d[xCoor] + "<br>" + "y: " + d[yCoor];
+          return xCoor+": " + d[xCoor] + "<br>" + yCoor+": " + d[yCoor];
         });
       var zoomBeh = d3.behavior
         .zoom()
@@ -116,7 +108,7 @@ export default {
         .y(y)
         .scaleExtent([0, 500])
         .on("zoom", zoom);
-      console.log(this.id);
+      // console.log(this.id);
       var svg = d3
         .select("#" + this.id)
         .append("svg")
@@ -231,11 +223,7 @@ export default {
         })
         .attr("transform", transform)
         .on("mouseover", tip.show)
-        .on("mouseout", tip.hide)
-        // .on("click", function(d) {
-        //   d3.select(this).style("fill", "magenta");
-        //   vm.getPipeline(d);
-        // });
+        .on("mouseout", tip.hide)        
         // once clicked, request pipeline associated with this point (solution)
         .on("click", this.onClick);
       // this.svgObjects = objects;

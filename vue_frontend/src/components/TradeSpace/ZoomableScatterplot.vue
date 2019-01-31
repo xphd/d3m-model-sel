@@ -16,7 +16,10 @@ export default {
     return {
       xCoor: this.coordinate.xCoor, // x-coordinate
       yCoor: this.coordinate.yCoor, //
-      id: "zoomable-" + this.index
+      id: "zoomable-" + this.index,
+      // seletedPoint: "",
+      // svgObjects: null
+      selectedSolutions: new Set()
     };
   },
   watch: {
@@ -24,6 +27,12 @@ export default {
       this.getZoomableScatterplot(this.xCoor, this.yCoor);
       console.log(this.solutions);
     }
+    // selectedSolutions: function() {
+    //   console.log("selectedPoint is called");
+    //   // d3.select("#" + this.seletedPoint.id).style("fill", "red");
+    //   console.log("cl-" + this.seletedPoint.id);
+    //   d3.selectAll(".cl-" + this.seletedPoint.id).style("fill", "red");
+    // }
   },
   mounted() {
     if (this.solutions) {
@@ -31,20 +40,29 @@ export default {
     }
   },
   methods: {
+    onClick(d) {
+      var curSolutionId = d["id"];
+      let selectedSolutions = this.selectedSolutions;
+      if (selectedSolutions.has(curSolutionId)) {
+        selectedSolutions.delete(curSolutionId);
+        d3.selectAll(".cl-" + curSolutionId).style("fill", "");
+      } else {
+        selectedSolutions.add(curSolutionId);
+        d3.selectAll(".cl-" + curSolutionId).style("fill", "red");
+        this.getPipeline(d);
+      }
+    },
     getPipeline(d) {
       // d is the element of solutions, aka solution
       if (d) {
-        var solutionId = d["id"];
-        // console.log(solutionId);
-        // responsePipeline defined in PipelineView.vue
         this.$socket.emit("requestPipeline", solutionId);
       }
     },
     getZoomableScatterplot(xCoor, yCoor) {
       // console.log("getZoomableScatterplot");
-      var margin = { top: 50, right: 300, bottom: 50, left: 50 },
-        outerWidth = 1050,
-        outerHeight = 500,
+      var margin = { top: 50, right: 50, bottom: 50, left: 50 },
+        outerWidth = 600,
+        outerHeight = 400,
         width = outerWidth - margin.left - margin.right,
         height = outerHeight - margin.top - margin.bottom;
       var x = d3.scale
@@ -173,6 +191,7 @@ export default {
         .classed("objects", true)
         .attr("width", width)
         .attr("height", height);
+
       objects
         .append("svg:line")
         .classed("axisLine hAxisLine", true)
@@ -196,6 +215,7 @@ export default {
         .style("shape-rendering", "crispEdges")
         .style("stroke", "rgba(0, 0, 0, 0.5)")
         .style("stroke-width", "2px");
+      // var vm = this; // vue object
       objects
         .selectAll(".dot")
         .data(data)
@@ -206,12 +226,19 @@ export default {
         .attr("r", function(d) {
           return 6;
         })
+        .attr("class", function(d) {
+          return "dot" + " cl-" + d.id;
+        })
         .attr("transform", transform)
         .on("mouseover", tip.show)
         .on("mouseout", tip.hide)
+        // .on("click", function(d) {
+        //   d3.select(this).style("fill", "magenta");
+        //   vm.getPipeline(d);
+        // });
         // once clicked, request pipeline associated with this point (solution)
-        .on("click", this.getPipeline);
-
+        .on("click", this.onClick);
+      // this.svgObjects = objects;
       function zoom() {
         let xa = svg.select(".x.axis").call(xAxis);
         xa.selectAll("path")

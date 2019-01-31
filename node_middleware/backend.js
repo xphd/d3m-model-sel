@@ -22,7 +22,9 @@ fs.readdirSync(path).forEach(filename => {
   const solution = {
     id: solutionId,
     pipelineSize: 0,
-    score: 0
+    timeProduce: 0,
+    timeFit: 0,
+    scores: []
   };
   solutions.push(solution); // filename is nothing but solution_id
   // console.log(solution);
@@ -59,9 +61,12 @@ serverSocket.on("connection", socket => {
       let tempObj2 = fs.readFileSync(filename2, "utf-8");
 
       // hardcode at this moment
-      let score = JSON.parse(tempObj2).scores[0].value.raw.double;
+      let scoreType = JSON.parse(tempObj2).scores[0].metric.metric;
+      let scoreValue = JSON.parse(tempObj2).scores[0].value.raw.double;
 
-      solution.score = score;
+      let score = { scoreType: scoreType, socreValue: scoreValue };
+
+      solution.scores.push(score);
     });
 
     // get pipelineSize

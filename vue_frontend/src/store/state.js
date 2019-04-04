@@ -2,4 +2,5 @@ const state = {
     selected: "Alex123"
   };
 
-module.exports = state;
+// module.exports = state;
+export default state;

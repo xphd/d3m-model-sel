@@ -29,8 +29,8 @@ export default {
     ModelType
   },
   mounted() {
-    let selected = this.$store.state.selected;
-    console.log(selected);
+    // let selected = this.$store.state.selected;
+    // console.log(selected);
   }
 };
 </script>

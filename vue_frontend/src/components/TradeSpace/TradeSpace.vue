@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>Trade Space</p>    
+    <p>Trade Space</p>
     <div class="row">
       <div class="col-sm-6" v-for="(coordinate,i) in coordinates" :key="i">
         <component
@@ -20,14 +20,18 @@
       :key="i"
     ></component>-->
     <ul v-for="(solution,i) in solutions" :key="i">
-      <li :class="'cl-'+ solution.id">{{solution.id}}</li>
+      <li
+        :class="'cl-'+ solution.id"
+        @mouseover="onMouseover(solution.id)"
+        @mouseout="onMouseout(solution.id)"
+      >{{solution.id}}</li>
     </ul>
-    
   </div>
 </template>
 
 <script>
 // import Coordinate from "./Coordinate.vue";
+import * as d3 from "d3v3";
 import ZoomableScatterplot from "./ZoomableScatterplot.vue";
 export default {
   name: "trade-spece",
@@ -35,24 +39,31 @@ export default {
     return {
       solutions: [],
       coordinates: [],
-      xCoors:["timeProduce","timeFit"],
-      yCoors:[]
+      xCoors: ["timeProduce", "timeFit"],
+      yCoors: [],
+      selected:""
     };
   },
+  
   methods: {
-    addPlot(xCoor,yCoor) {
+    addPlot(xCoor, yCoor) {
       console.log("addPlot");
-      // this.coordinates.push({ xCoor: "pipelineSize", yCoor: "score" });
-      // this.coordinates.push({ xCoor: "timeProduce", yCoor: "score" });
-      // this.coordinates.push({ xCoor: "timeFit", yCoor: "score" });
       this.coordinates.push({ xCoor: xCoor, yCoor: yCoor });
+    },
+    onMouseover(id) {
+      console.log("mouse over:" + id);
+      this.selected = "cl-" + id;
+    },
+    onMouseout(id) {
+      console.log("mouse out:" + id);
+      this.selected = "";
     }
   },
   watch: {
     solutions() {
       if (this.solutions.length != 0) {
-        this.addPlot("timeProduce",this.yCoors[0]);
-        this.addPlot("timeFit",this.yCoors[0]);
+        this.addPlot("timeProduce", this.yCoors[0]);
+        this.addPlot("timeFit", this.yCoors[0]);
       }
     }
   },
@@ -72,7 +83,7 @@ export default {
       // console.log(solutions.length);
       // this.yCoors.push(solutions[0].scores.getKey())
       // console.log( Object.keys(solutions[0].scores))
-      this.yCoors = Object.keys(solutions[0].scores)
+      this.yCoors = Object.keys(solutions[0].scores);
     }
   },
   mounted() {

@@ -68,7 +68,7 @@ serverSocket.on("connection", socket => {
         [scoreType]:scoreValue}
 
       solution.scores=scores;
-      console.log(scores)
+      // console.log(scores)
     });
 
     // get pipelineSize

@@ -37,22 +37,19 @@ export default {
   name: "trade-spece",
   data() {
     return {
-<<<<<<< HEAD
-      solutions: [
-        {
-          id: "1x2c",
-          pipelineSize: 7,
-          score: 5.6
-        }
-      ],
+      // solutions: [
+      //   {
+      //     id: "1x2c",
+      //     pipelineSize: 7,
+      //     score: 5.6
+      //   }
+      // ],
       coordinates: [{ xCoor: "pipelineSize", yCoor: "score" }]
-=======
       solutions: [],
       coordinates: [],
       xCoors: ["timeProduce", "timeFit"],
       yCoors: [],
       selected:""
->>>>>>> aab187c7aec1c8a480671a92fd1fbc1a1fc724bd
     };
   },
   
@@ -83,17 +80,14 @@ export default {
     ZoomableScatterplot
   },
   sockets: {
-<<<<<<< HEAD
     // connect() {
     //   console.log("Client: Try to connect!");
     //   if (this.solution == null) this.$socket.emit("requestSolutions");
     // },
-=======
     connect() {
       console.log("Client: Try to connect!");
       if (this.solutions == null) this.$socket.emit("requestSolutions");
     },
->>>>>>> aab187c7aec1c8a480671a92fd1fbc1a1fc724bd
     responseSolutions(solutions) {
       console.log("responseSolutions");
       this.solutions = solutions;

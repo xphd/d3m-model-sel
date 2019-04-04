@@ -22,7 +22,9 @@ fs.readdirSync(path).forEach(filename => {
   const solution = {
     id: solutionId,
     pipelineSize: 0,
-    score: 0
+    timeProduce: 0,
+    timeFit: 0,
+    scores: {}
   };
   solutions.push(solution); // filename is nothing but solution_id
   // console.log(solution);
@@ -59,9 +61,14 @@ serverSocket.on("connection", socket => {
       let tempObj2 = fs.readFileSync(filename2, "utf-8");
 
       // hardcode at this moment
-      let score = JSON.parse(tempObj2).scores[0].value.raw.double;
+      let scoreType = JSON.parse(tempObj2).scores[0].metric.metric;
+      let scoreValue = JSON.parse(tempObj2).scores[0].value.raw.double;
 
-      solution.score = score;
+      let scores = {
+        [scoreType]:scoreValue}
+
+      solution.scores=scores;
+      // console.log(scores)
     });
 
     // get pipelineSize
@@ -72,6 +79,65 @@ serverSocket.on("connection", socket => {
       let tempObj = fs.readFileSync(filename, "utf-8");
       let size = JSON.parse(tempObj).pipeline.steps.length;
       solution.pipelineSize = size;
+    });
+
+    // get timeProduce(s)
+    let produceSolutionPath = "./responses/produceSolutionResponses/";
+    let getProduceSolutionPath =
+      "./responses/getProduceSolutionResultsResponses/";
+    solutions.forEach(solution => {
+      let id = solution.id;
+      let filename1 = produceSolutionPath + id + ".json";
+      let tempObj = fs.readFileSync(filename1, "utf-8");
+
+      let request_id = JSON.parse(tempObj).request_id;
+      let filename2 = getProduceSolutionPath + request_id + ".json";
+      let tempObj2 = fs.readFileSync(filename2, "utf-8");
+
+      // hardcode at this moment
+      let start_seconds_str = JSON.parse(tempObj2).progress.start.seconds;
+      let end_seconds_str = JSON.parse(tempObj2).progress.end.seconds;
+
+      let start_seconds = parseInt(start_seconds_str);
+      let end_seconds = parseInt(end_seconds_str);
+
+      let start_nanos = JSON.parse(tempObj2).progress.start.nanos;
+      let end_nanos = JSON.parse(tempObj2).progress.end.nanos;
+
+      let diff_seconds = end_seconds - start_seconds;
+      let diff_nanos = end_nanos - start_nanos;
+
+      let timeProduce = diff_seconds + diff_nanos * Math.pow(10, -9);
+
+      solution.timeProduce = timeProduce;
+      // console.log(timeProduce);
+    });
+
+    // get timeFit(s)
+    let getFitSolutionPath = "./responses/getFitSolutionResultsResponses/";
+    solutions.forEach(solution => {
+      let id = solution.id;
+      let filename = getFitSolutionPath + id + ".json";
+
+      let tempObj = fs.readFileSync(filename, "utf-8");
+
+      // hardcode at this moment
+      let start_seconds_str = JSON.parse(tempObj).progress.start.seconds;
+      let end_seconds_str = JSON.parse(tempObj).progress.end.seconds;
+
+      let start_seconds = parseInt(start_seconds_str);
+      let end_seconds = parseInt(end_seconds_str);
+
+      let start_nanos = JSON.parse(tempObj).progress.start.nanos;
+      let end_nanos = JSON.parse(tempObj).progress.end.nanos;
+
+      let diff_seconds = end_seconds - start_seconds;
+      let diff_nanos = end_nanos - start_nanos;
+
+      let timeFit = diff_seconds + diff_nanos * Math.pow(10, -9);
+
+      solution.timeFit = timeFit;
+      // console.log(timeFit);
     });
 
     socket.emit("responseSolutions", solutions);

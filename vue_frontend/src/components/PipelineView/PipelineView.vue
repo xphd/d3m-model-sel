@@ -12,8 +12,41 @@ export default {
   data() {
     return {
       // pipeline: {},
-      nodes: [],
-      edges: [],
+      nodes: [
+        {
+          id: 0,
+          state: "",
+          value: {
+            label: "Start"
+          }
+        },
+        {
+          id: 1,
+          state: "success",
+          value: {
+            label: "featuretools.DFS"
+          },
+          info:
+            "Calculates a feature matrix and features given a dictionary of entities and a list of relationships."
+        },
+        {
+          id: 2,
+          state: "success",
+          value: {
+            label: "xgboost.XGBClassifier"
+          },
+          info:
+            "Parallel tree boosting (also known as GBDT, GBM) optimized for classification problems."
+        },
+        {
+          id: 3,
+          state: "",
+          value: {
+            label: "End"
+          }
+        }
+      ],
+      edges: [{ from: 0, to: 1 }, { from: 1, to: 2 }, { from: 2, to: 3 }],
       flag: false
     };
   },
@@ -25,8 +58,9 @@ export default {
     responsePipeline(pipeline) {
       // this.pipeline = pipeline;
       this.flag = false;
-      this.init(pipeline);
-      // this.init();
+
+      // this.init(pipeline);
+
       this.$nextTick(() => {
         this.flag = true;
       });

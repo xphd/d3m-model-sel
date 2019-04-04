@@ -14,9 +14,11 @@ export default {
   props: ["solutions", "coordinate", "index"],
   data() {
     return {
-      xCoor: this.coordinate.xCoor, // x-coordinate
+      id: "zoomable-" + this.index,
+      xCoor: this.coordinate.xCoor, //
       yCoor: this.coordinate.yCoor, //
-      id: "zoomable-" + this.index
+
+      selectedSolutions: new Set()
     };
   },
   watch: {
@@ -31,36 +33,42 @@ export default {
     }
   },
   methods: {
+    onClick(d) {
+      var curSolutionId = d["id"];
+      let selectedSolutions = this.selectedSolutions;
+      if (selectedSolutions.has(curSolutionId)) {
+        selectedSolutions.delete(curSolutionId);
+        d3.selectAll(".cl-" + curSolutionId).style("fill", "");
+      } else {
+        selectedSolutions.add(curSolutionId);
+        d3.selectAll(".cl-" + curSolutionId).style("fill", "red");
+        this.getPipeline(d);
+      }
+    },
     getPipeline(d) {
       // d is the element of solutions, aka solution
       if (d) {
-        var solutionId = d["id"];
-        // console.log(solutionId);
-        // responsePipeline defined in PipelineView.vue
+        let solutionId = d.id;
         this.$socket.emit("requestPipeline", solutionId);
       }
     },
     getZoomableScatterplot(xCoor, yCoor) {
       // console.log("getZoomableScatterplot");
-      var margin = { top: 50, right: 300, bottom: 50, left: 50 },
-        outerWidth = 1050,
-        outerHeight = 500,
+      var margin = { top: 50, right: 50, bottom: 50, left: 50 },
+        outerWidth = 600,
+        outerHeight = 400,
         width = outerWidth - margin.left - margin.right,
         height = outerHeight - margin.top - margin.bottom;
-
       var x = d3.scale
         .linear()
         .range([0, width])
         .nice();
-
       var y = d3.scale
         .linear()
         .range([height, 0])
         .nice();
-
       // shorthand notation
       var data = this.solutions;
-
       var xMax =
           d3.max(data, function(d) {
             return d[xCoor];
@@ -71,34 +79,30 @@ export default {
         xMin = xMin > 0 ? 0 : xMin,
         yMax =
           d3.max(data, function(d) {
-            return d[yCoor];
+            return d["scores"][yCoor]
           }) * 1.05,
         yMin = d3.min(data, function(d) {
-          return d[yCoor];
+          return d["scores"][yCoor];
         }),
         yMin = yMin > 0 ? 0 : yMin;
-
       x.domain([xMin, xMax]);
       y.domain([yMin, yMax]);
-
       var xAxis = d3.svg
         .axis()
         .scale(x)
         .orient("bottom")
         .tickSize(-height);
-
       var yAxis = d3.svg
         .axis()
         .scale(y)
         .orient("left")
         .tickSize(-width);
-
       var tip = d3
         .tip()
         .attr("class", "d3-tip")
         .offset([-10, 0])
         .html(function(d) {
-          return "x: " + d[xCoor] + "<br>" + "y: " + d[yCoor];
+          return xCoor + ": " + d[xCoor] + "<br>" + yCoor + ": " + d["scores"][yCoor];
         });
 
       var zoomBeh = d3.behavior
@@ -107,8 +111,7 @@ export default {
         .y(y)
         .scaleExtent([0, 500])
         .on("zoom", zoom);
-
-      console.log(this.id);
+      // console.log(this.id);
       var svg = d3
         .select("#" + this.id)
         .append("svg")
@@ -117,38 +120,67 @@ export default {
         .append("g")
         .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
         .call(zoomBeh);
-
       svg.call(tip);
-
       svg
         .append("rect")
         .attr("width", width)
-        .attr("height", height);
-
-      svg
+        .attr("height", height)
+        .style("fill", "transparent")
+        .style("shape-rendering", "crispEdges");
+      let xAxisName = xCoor;
+      if (xCoor == "timeProduce") {
+        xAxisName = "Time Produce (s)";
+      } else if (xCoor == "pipelineSize") {
+        xAxisName = "Pipeline Size";
+      }
+      let svgXAxis = svg
         .append("g")
         .classed("x axis", true)
         .attr("transform", "translate(0," + height + ")")
-        .call(xAxis)
+        .call(xAxis);
+      svgXAxis
         .append("text")
         .classed("label", true)
         .attr("x", width)
         .attr("y", margin.bottom - 10)
         .style("text-anchor", "end")
-        .text(xCoor);
-
-      svg
+        .text(xAxisName);
+      svgXAxis
+        .selectAll("path")
+        .style("fill", "none")
+        .style("stroke", "rgba(0, 0, 0, 0.1)")
+        .style("shape-rendering", "crispEdges");
+      svgXAxis
+        .selectAll("line")
+        .style("fill", "none")
+        .style("stroke", "rgba(0, 0, 0, 0.1)")
+        .style("shape-rendering", "crispEdges");
+      let yAxisName = yCoor;
+      if (yCoor == "score") {
+        yAxisName = "F1";
+      }
+      let svgYAxis = svg
         .append("g")
         .classed("y axis", true)
-        .call(yAxis)
+        .call(yAxis);
+      svgYAxis
         .append("text")
         .classed("label", true)
         .attr("transform", "rotate(-90)")
         .attr("y", -margin.left)
         .attr("dy", ".71em")
         .style("text-anchor", "end")
-        .text(yCoor);
-
+        .text(yAxisName);
+      svgYAxis
+        .selectAll("path")
+        .style("fill", "none")
+        .style("stroke", "rgba(0, 0, 0, 0.1)")
+        .style("shape-rendering", "crispEdges");
+      svgYAxis
+        .selectAll("line")
+        .style("fill", "none")
+        .style("stroke", "rgba(0, 0, 0, 0.1)")
+        .style("shape-rendering", "crispEdges");
       var objects = svg
         .append("svg")
         .classed("objects", true)
@@ -162,39 +194,65 @@ export default {
         .attr("y1", 0)
         .attr("x2", width)
         .attr("y2", 0)
-        .attr("transform", "translate(0," + height + ")");
-
+        .attr("transform", "translate(0," + height + ")")
+        .style("fill", "none")
+        .style("shape-rendering", "crispEdges")
+        .style("stroke", "rgba(0, 0, 0, 0.5)")
+        .style("stroke-width", "2px");
       objects
         .append("svg:line")
         .classed("axisLine vAxisLine", true)
         .attr("x1", 0)
         .attr("y1", 0)
         .attr("x2", 0)
-        .attr("y2", height);
-
+        .attr("y2", height)
+        .style("fill", "none")
+        .style("shape-rendering", "crispEdges")
+        .style("stroke", "rgba(0, 0, 0, 0.5)")
+        .style("stroke-width", "2px");
+      // var vm = this; // vue object
       objects
         .selectAll(".dot")
         .data(data)
         .enter()
         .append("circle")
         .classed("dot", true)
+        .style("fill-opacity", "0.5")
         .attr("r", function(d) {
           return 6;
+        })
+        .attr("class", function(d) {
+          return "dot" + " cl-" + d.id;
         })
         .attr("transform", transform)
         .on("mouseover", tip.show)
         .on("mouseout", tip.hide)
         // once clicked, request pipeline associated with this point (solution)
-        .on("click", this.getPipeline);
+        .on("click", this.onClick);
 
       function zoom() {
-        svg.select(".x.axis").call(xAxis);
-        svg.select(".y.axis").call(yAxis);
+        let xa = svg.select(".x.axis").call(xAxis);
+        xa.selectAll("path")
+          .style("fill", "none")
+          .style("stroke", "rgba(0, 0, 0, 0.1)")
+          .style("shape-rendering", "crispEdges");
+        xa.selectAll("line")
+          .style("fill", "none")
+          .style("stroke", "rgba(0, 0, 0, 0.1)")
+          .style("shape-rendering", "crispEdges");
+        let ya = svg.select(".y.axis").call(yAxis);
+        ya.selectAll("path")
+          .style("fill", "none")
+          .style("stroke", "rgba(0, 0, 0, 0.1)")
+          .style("shape-rendering", "crispEdges");
+        ya.selectAll("line")
+          .style("fill", "none")
+          .style("stroke", "rgba(0, 0, 0, 0.1)")
+          .style("shape-rendering", "crispEdges");
         svg.selectAll(".dot").attr("transform", transform);
       }
-
       function transform(d) {
-        return "translate(" + x(d[xCoor]) + "," + y(d[yCoor]) + ")";
+        return "translate(" + x(d[xCoor]) + "," + y(d["scores"][yCoor]) + ")";
       }
     }
   }
@@ -202,29 +260,6 @@ export default {
 </script>
 
 <style>
-rect {
-  fill: transparent;
-  shape-rendering: crispEdges;
-}
-
-.axis path,
-.axis line {
-  fill: none;
-  stroke: rgba(0, 0, 0, 0.1);
-  shape-rendering: crispEdges;
-}
-
-.axisLine {
-  fill: none;
-  shape-rendering: crispEdges;
-  stroke: rgba(0, 0, 0, 0.5);
-  stroke-width: 2px;
-}
-
-.dot {
-  fill-opacity: 0.5;
-}
-
 .d3-tip {
   line-height: 1;
   font-weight: bold;
@@ -233,7 +268,6 @@ rect {
   color: #fff;
   border-radius: 2px;
 }
-
 /* Creates a small triangle extender for the tooltip */
 .d3-tip:after {
   box-sizing: border-box;
@@ -246,7 +280,6 @@ rect {
   position: absolute;
   text-align: center;
 }
-
 /* Style northward tooltips differently */
 .d3-tip.n:after {
   margin: -1px 0 0 0;
